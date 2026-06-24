@@ -441,7 +441,6 @@
 
         /* 저장 버튼: 홈 화면 버튼과 동일한 모양 + 초록색 */
         .btn-template-save {
-            width: 100%;
             padding: 16px;
             background-color: #2ECC71;
             color: white;
@@ -534,33 +533,7 @@
         border-radius: 0 !important;
         background: #fff !important;
     }
-        /* 기본 체크박스 모양을 숨김 */
-input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none; /* Safari/iOS 지원 */
-    width: 18px;
-    height: 18px;
-    border: 1px solid #999;
-    cursor: pointer;
-    vertical-align: middle;
-}
 
-/* 체크 되었을 때의 모양 */
-input[type="checkbox"]:checked {
-    background-color: #007bff; /* 체크 시 색상 */
-    border-color: #007bff;
-    position: relative;
-}
-
-/* 체크 표시(v) 만들기 */
-input[type="checkbox"]:checked::after {
-    content: '✔';
-    color: white;
-    font-size: 14px;
-    position: absolute;
-    left: 2px;
-    top: -2px;
-}
     </style>
 </head>
 <body>
@@ -1122,16 +1095,65 @@ input[type="checkbox"]:checked::after {
                         input.parentNode.replaceChild(span, input);
                     });
 
-                    /* checkbox / radio → 기호 교체 */
+                    /* ── checkbox / radio → CSS로 직접 그린 박스로 교체 (이모지 방지) ── */
                     const clonedChks = Array.from(clonedEl.querySelectorAll('input[type="checkbox"], input[type="radio"]'));
                     clonedChks.forEach((el, i) => {
                         const d = chkData[i];
                         if (!d) return;
                         const span = clonedDoc.createElement('span');
-                        span.textContent = d.checked
-                            ? (d.type === 'radio' ? '●' : '☑')
-                            : (d.type === 'radio' ? '○' : '☐');
-                        span.style.cssText = 'font-size:12px;vertical-align:middle;margin-right:2px;flex-shrink:0;';
+
+                        if (d.type === 'radio') {
+                            /* 라디오: 원형 박스 */
+                            span.style.cssText =
+                                'display:inline-block;' +
+                                'width:11px;height:11px;' +
+                                'border:1.5px solid #333;' +
+                                'border-radius:50%;' +
+                                'vertical-align:middle;' +
+                                'margin-right:2px;' +
+                                'flex-shrink:0;' +
+                                'position:relative;' +
+                                'box-sizing:border-box;' +
+                                'background:' + (d.checked ? '#333' : 'transparent') + ';';
+                        } else {
+                            /* 체크박스: 사각형 박스 + 체크 표시 */
+                            if (d.checked) {
+                                span.style.cssText =
+                                    'display:inline-block;' +
+                                    'width:11px;height:11px;' +
+                                    'border:1.5px solid #333;' +
+                                    'border-radius:1px;' +
+                                    'vertical-align:middle;' +
+                                    'margin-right:2px;' +
+                                    'flex-shrink:0;' +
+                                    'box-sizing:border-box;' +
+                                    'background:transparent;' +
+                                    'position:relative;';
+                                /* 체크 표시를 내부 span으로 추가 */
+                                const checkMark = clonedDoc.createElement('span');
+                                checkMark.style.cssText =
+                                    'position:absolute;' +
+                                    'top:-1px;left:1px;' +
+                                    'font-size:10px;' +
+                                    'line-height:1;' +
+                                    'color:#333;' +
+                                    'font-family:Arial,sans-serif;' +
+                                    'font-style:normal;';
+                                checkMark.textContent = '\u2713'; /* ✓ 표준 체크 문자 */
+                                span.appendChild(checkMark);
+                            } else {
+                                span.style.cssText =
+                                    'display:inline-block;' +
+                                    'width:11px;height:11px;' +
+                                    'border:1.5px solid #333;' +
+                                    'border-radius:1px;' +
+                                    'vertical-align:middle;' +
+                                    'margin-right:2px;' +
+                                    'flex-shrink:0;' +
+                                    'box-sizing:border-box;' +
+                                    'background:transparent;';
+                            }
+                        }
                         el.parentNode.replaceChild(span, el);
                     });
 
