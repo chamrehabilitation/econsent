@@ -534,6 +534,33 @@
         border-radius: 0 !important;
         background: #fff !important;
     }
+        /* 기본 체크박스 모양을 숨김 */
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none; /* Safari/iOS 지원 */
+    width: 18px;
+    height: 18px;
+    border: 1px solid #999;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+/* 체크 되었을 때의 모양 */
+input[type="checkbox"]:checked {
+    background-color: #007bff; /* 체크 시 색상 */
+    border-color: #007bff;
+    position: relative;
+}
+
+/* 체크 표시(v) 만들기 */
+input[type="checkbox"]:checked::after {
+    content: '✔';
+    color: white;
+    font-size: 14px;
+    position: absolute;
+    left: 2px;
+    top: -2px;
+}
     </style>
 </head>
 <body>
