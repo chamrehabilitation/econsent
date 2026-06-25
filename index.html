@@ -17,17 +17,17 @@
 
     <script>
       // GitHub Pages /econsent/ 전용 서비스워커 등록
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function () {
-          navigator.serviceWorker.register('/econsent/sw.js?v=20260625-3', { scope: '/econsent/' })
-            .then(function(reg) {
-              console.log('Service Worker 등록 성공:', reg.scope);
-            })
-            .catch(function(err) {
-              console.log('Service Worker 등록 실패:', err);
-            });
-        });
-      }
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js')
+      .then(function(reg) {
+        console.log('Service Worker 등록 성공:', reg.scope);
+      })
+      .catch(function(err) {
+        console.log('Service Worker 등록 실패:', err);
+      });
+  });
+}
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
