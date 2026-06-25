@@ -402,26 +402,13 @@
             <tr>
                 <th>기저질환</th>
                 <td>
-<div class="nowrap-row">
-    <label onclick="toggleCheck(this)">
-        <input type="hidden" name="disease" value="bp" disabled> <span class="custom-check"></span> 고혈압
-    </label>&nbsp;
-    
-    <label onclick="toggleCheck(this)">
-        <input type="hidden" name="disease" value="dm" disabled>
-        <span class="custom-check"></span> 당뇨
-    </label>&nbsp;
-    
-    <label onclick="toggleCheck(this)">
-        <input type="hidden" name="disease" value="surgery" disabled>
-        <span class="custom-check"></span> 수술여부
-    </label> (<input type="text" id="surgeryText" class="inline-field" style="width:90px;">)
-</div>
                     <div class="nowrap-row">
-               <label onclick="toggleCheck(this)">
-        <input type="hidden" name="disease" value="etc" disabled>
-        <span class="custom-check"></span> 기타
-    </label>&nbsp;(<input type="text" id="diseaseEtc" class="inline-field" style="width:200px;">)
+                        <label onclick="toggleCheck(this)"><span class="custom-check" data-name="disease" data-value="bp"></span> 고혈압</label>&nbsp;
+                        <label onclick="toggleCheck(this)"><span class="custom-check" data-name="disease" data-value="dm"></span> 당뇨</label>&nbsp;
+                        <label onclick="toggleCheck(this)"><span class="custom-check" data-name="disease" data-value="surgery"></span> 수술여부</label>&nbsp;(<input type="text" id="surgeryText" class="inline-field" style="width:90px;">)
+                    </div>
+                    <div class="nowrap-row">
+                        <label onclick="toggleCheck(this)"><span class="custom-check" data-name="disease" data-value="etc"></span> 기타</label>&nbsp;(<input type="text" id="diseaseEtc" class="inline-field" style="width:200px;">)
                     </div>
                 </td>
             </tr>
