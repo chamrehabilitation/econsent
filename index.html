@@ -178,6 +178,10 @@
             box-sizing: border-box;
         }
 
+        h1 {
+            font-size: 24px;
+        }
+
         h2 {
             margin: 16px 0 10px;
             font-size: 18px;
@@ -511,46 +515,32 @@
             background: #fff !important;
         }
 
-        /* ===== PDF용 체크박스/라디오 커스텀 표시 ===== */
+        /* ===== PDF 저장용 체크박스 / 라디오 표시 ===== */
         .pdf-mark {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 13px;
+            height: 13px;
             margin-right: 3px;
-            vertical-align: -1px;
+            vertical-align: -2px;
             box-sizing: border-box;
-            position: relative;
             flex-shrink: 0;
+            color: #000;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            line-height: 1;
+            background: #fff;
         }
         .pdf-checkbox {
             border: 1.6px solid #000;
             border-radius: 2px;
-        }
-        .pdf-checkbox.checked::after {
-            content: "";
-            position: absolute;
-            left: 2px;
-            top: -1px;
-            width: 4px;
-            height: 8px;
-            border-right: 2px solid #000;
-            border-bottom: 2px solid #000;
-            transform: rotate(45deg);
+            font-size: 11px;
         }
         .pdf-radio {
             border: 1.6px solid #000;
             border-radius: 50%;
-        }
-        .pdf-radio.checked::after {
-            content: "";
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: #000;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            font-size: 9px;
         }
     </style>
 </head>
@@ -919,9 +909,11 @@
         function restrictToNumbers(el) {
             el.value = el.value.replace(/[^0-9]/g, '');
         }
+
         function restrictToRRN(el) {
             el.value = el.value.replace(/[^0-9-]/g, '');
         }
+
         function syncName() {
             document.getElementById('bottomName').innerText = document.getElementById('topName').value;
         }
@@ -942,12 +934,19 @@
         canvas.addEventListener("touchstart", function (e) {
             const touch = e.touches[0];
             canvas.dispatchEvent(new MouseEvent("mousedown", { clientX: touch.clientX, clientY: touch.clientY }));
-        }, false);
+            e.preventDefault();
+        }, { passive: false });
 
         canvas.addEventListener("touchmove", function (e) {
             const touch = e.touches[0];
             canvas.dispatchEvent(new MouseEvent("mousemove", { clientX: touch.clientX, clientY: touch.clientY }));
-        }, false);
+            e.preventDefault();
+        }, { passive: false });
+
+        canvas.addEventListener("touchend", function (e) {
+            canvas.dispatchEvent(new MouseEvent("mouseup", {}));
+            e.preventDefault();
+        }, { passive: false });
 
         function getMousePos(canvasDom, mouseEvent) {
             const rect = canvasDom.getBoundingClientRect();
@@ -974,18 +973,22 @@
         function endDraw() {
             drawing = false;
         }
+
         document.addEventListener("mouseup", endDraw);
 
         function openModal() {
             document.getElementById("signatureModal").style.display = "flex";
             clearCanvas();
         }
+
         function closeModal() {
             document.getElementById("signatureModal").style.display = "none";
         }
+
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
+
         function saveSignature() {
             const imgData = canvas.toDataURL("image/png");
             const savedImg = document.getElementById("savedSignature");
@@ -996,7 +999,7 @@
 
         function saveAsSinglePagePDF() {
             const chartNo = document.getElementById("chartNo").value.trim() || "미입력";
-            const pName   = document.getElementById("topName").value.trim()  || "환자명";
+            const pName = document.getElementById("topName").value.trim() || "환자명";
 
             const savedImg = document.getElementById("savedSignature");
             if (savedImg.style.display === 'none' || !savedImg.src) {
@@ -1036,16 +1039,18 @@
             const infoBoxes = element.querySelectorAll('.info-box');
             const origFontSizes = Array.from(infoBoxes).map(b => b.style.fontSize);
             infoBoxes.forEach(b => { b.style.fontSize = fontSize + 'px'; });
+
             while (element.scrollHeight > A4_H_PX && fontSize > 7) {
                 fontSize -= 0.5;
                 infoBoxes.forEach(b => { b.style.fontSize = fontSize + 'px'; });
             }
+
             infoBoxes.forEach((b, i) => { b.style.fontSize = origFontSizes[i]; });
 
-            const today   = new Date();
-            const yy      = String(today.getFullYear()).slice(-2);
-            const mm      = String(today.getMonth() + 1).padStart(2, '0');
-            const dd      = String(today.getDate()).padStart(2, '0');
+            const today = new Date();
+            const yy = String(today.getFullYear()).slice(-2);
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
             const fileName = `참재활_${chartNo}_${pName}_${yy}${mm}${dd}.pdf`;
 
             html2canvas(element, {
@@ -1091,17 +1096,25 @@
                                 'padding:0 2px 1px;margin:0 4px;' +
                                 'box-sizing:border-box;background:transparent;';
                         }
+
                         input.parentNode.replaceChild(span, input);
                     });
 
-                    /* ===== 체크박스 / 라디오를 문자 대신 도형 span으로 치환 ===== */
+                    /* ===== 체크박스 / 라디오를 실제 문자 포함 span으로 치환 ===== */
                     const clonedChecks = Array.from(clonedEl.querySelectorAll('input[type="checkbox"], input[type="radio"]'));
                     clonedChecks.forEach((el, i) => {
                         const d = chkData[i];
                         if (!d) return;
 
                         const mark = clonedDoc.createElement('span');
-                        mark.className = 'pdf-mark ' + (d.type === 'radio' ? 'pdf-radio' : 'pdf-checkbox') + (d.checked ? ' checked' : '');
+
+                        if (d.type === 'checkbox') {
+                            mark.className = 'pdf-mark pdf-checkbox';
+                            mark.textContent = d.checked ? '✓' : '';
+                        } else {
+                            mark.className = 'pdf-mark pdf-radio';
+                            mark.textContent = d.checked ? '●' : '';
+                        }
 
                         el.parentNode.replaceChild(mark, el);
                     });
@@ -1110,14 +1123,13 @@
                     if (btn) btn.style.display = 'none';
                 }
             }).then(function(canvas) {
-
                 if (signBtn) signBtn.style.visibility = 'visible';
 
                 const imgData = canvas.toDataURL('image/jpeg', 0.97);
                 const pageW = 210, pageH = 297, margin = 5;
                 const availW = pageW - margin * 2;
                 const availH = pageH - margin * 2;
-                const ratio  = canvas.height / canvas.width;
+                const ratio = canvas.height / canvas.width;
 
                 let imgW = availW;
                 let imgH = availW * ratio;
