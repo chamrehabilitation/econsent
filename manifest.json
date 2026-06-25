@@ -1,23 +1,27 @@
 {
+  "id": "/econsent/",
   "name": "참재활의학과 전자동의서",
   "short_name": "참재활동의서",
   "description": "참재활의학과 전자동의서 시스템",
-  "start_url": "/econsent/index.html",
+  "start_url": "/econsent/index.html?source=pwa",
   "scope": "/econsent/",
   "display": "standalone",
+  "display_override": ["standalone"],
   "background_color": "#ffffff",
   "theme_color": "#0064DD",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "/econsent/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/econsent/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
