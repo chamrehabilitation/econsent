@@ -15,20 +15,19 @@
 
     <title id="dynamic-title">참재활의학과 개인정보 및 비급여 동의서 시스템</title>
 
-    <script>
-      // GitHub Pages /econsent/ 전용 서비스워커 등록
+<script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js')
-      .then(function(reg) {
-        console.log('Service Worker 등록 성공:', reg.scope);
-      })
-      .catch(function(err) {
-        console.log('Service Worker 등록 실패:', err);
-      });
-  });
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/econsent/sw.js')
+            .then(function (reg) {
+                console.log('Service Worker 등록 성공:', reg.scope);
+            })
+            .catch(function (err) {
+                console.log('Service Worker 등록 실패:', err);
+            });
+    });
 }
-    </script>
+</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
