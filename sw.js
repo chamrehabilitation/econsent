@@ -1,6 +1,11 @@
-self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open('app-store').then((cache) => cache.add('index.html')));
+self.addEventListener('install', function(event) {
+  self.skipWaiting();
 });
-self.addEventListener('fetch', (e) => {
-  e.respondWith(caches.match(e.request).then((res) => res || fetch(e.request)));
+
+self.addEventListener('activate', function(event) {
+  event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener('fetch', function(event) {
+  // 현재는 캐시 없이 기본 네트워크 요청만 사용
 });
